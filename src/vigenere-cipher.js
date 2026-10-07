@@ -1,4 +1,4 @@
-const { NotImplementedError } = require('../lib');
+const { NotImplementedError } = require("../lib");
 
 /**
  * Implement class VigenereCipheringMachine that allows us to create
@@ -20,14 +20,95 @@ const { NotImplementedError } = require('../lib');
  *
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  static chars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+
+  constructor(encryption) {
+    this.encryption = encryption;
   }
 
-  decrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  encrypt(msg, key) {
+    if (msg === undefined || key === undefined)
+      throw new Error("Incorrect arguments!");
+    let i = 0;
+    const msgChars = msg.toUpperCase().split(""),
+      keyChars = key.toUpperCase().split(""),
+      encryptedArr = msgChars.map((item) => {
+        if (VigenereCipheringMachine.chars.includes(item)) {
+          if (i === keyChars.length) i = 0;
+          const num = item.charCodeAt(0) + keyChars[i].charCodeAt(0) - 130;
+          if (num >= VigenereCipheringMachine.chars.length) {
+            item = String.fromCharCode(
+              num - VigenereCipheringMachine.chars.length + 65,
+            );
+          } else if (num < 0) {
+            item = String.fromCharCode(
+              num + VigenereCipheringMachine.chars.length + 65,
+            );
+          } else {
+            item = String.fromCharCode(num + 65);
+          }
+          i++;
+        }
+        return item;
+      });
+
+    return this.encryption === true || this.encryption === undefined
+      ? encryptedArr.join("")
+      : encryptedArr.reverse().join("");
+  }
+
+  decrypt(msg, key) {
+    if (msg === undefined || key === undefined)
+      throw new Error("Incorrect arguments!");
+    let i = 0;
+    const msgChars = msg.toUpperCase().split(""),
+      keyChars = key.toUpperCase().split("");
+    const decryptedArray = msgChars.map((item) => {
+      if (VigenereCipheringMachine.chars.includes(item)) {
+        if (i === keyChars.length) i = 0;
+        const num = item.charCodeAt(0) - keyChars[i].charCodeAt(0);
+        if (num < 0) {
+          item = String.fromCharCode(
+            num + VigenereCipheringMachine.chars.length + 65,
+          );
+        } else {
+          item = String.fromCharCode(num + 65);
+        }
+        i++;
+      }
+      return item;
+    });
+
+    return this.encryption === true || this.encryption === undefined
+      ? decryptedArray.join("")
+      : decryptedArray.reverse().join("");
   }
 }
 
